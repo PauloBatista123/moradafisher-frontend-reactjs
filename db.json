@@ -1,0 +1,66 @@
+{
+  "funcionarios": [
+    {
+      "id": "1",
+      "nome": "Paulo Henrique",
+      "sobrenome": "alves batista",
+      "funcao": "filetador"
+    },
+    {
+      "id": "2",
+      "nome": "Diego",
+      "sobrenome": "Batista",
+      "funcao": "filetador"
+    },
+    {
+      "id": "3",
+      "nome": "Lorena",
+      "sobrenome": "Soares",
+      "funcao": "filetador"
+    }
+  ],
+  "lancamentos": [
+    {
+      "id": "1",
+      "peso": 2.4,
+      "dataLancamento": "2022-09-03 19:38",
+      "type": "entrada",
+      "funcionario": {
+        "id": "3",
+        "nome": "Lorena",
+        "sobrenome": "Soares",
+        "funcao": "filetador"
+      }
+    },
+    {
+      "id": "2",
+      "peso": 2.8,
+      "dataLancamento": "2022-09-03 18:38",
+      "type": "entrada",
+      "funcionario": {
+        "id": "3",
+        "nome": "Lorena",
+        "sobrenome": "Soares",
+        "funcao": "filetador"
+      }
+    },
+    {
+      "id": "3",
+      "peso": 2.8,
+      "dataLancamento": "2022-09-03 18:38",
+      "type": "saida",
+      "funcionario": {
+        "id": "1",
+        "nome": "Paulo Henrique",
+        "sobrenome": "Batista",
+        "funcao": "filetador"
+      }
+    },
+    {
+      "peso": 2.8,
+      "funcionario": 2,
+      "type": "saida",
+      "id": "T-qiohs"
+    }
+  ]
+}
