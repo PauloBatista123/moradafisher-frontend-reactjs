@@ -1,8 +1,12 @@
-import { Box, Button, Divider, Flex, Heading, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, Icon, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
 import { Lista } from "./Lista";
+import { ModalForm } from "./Modal";
 
 export function Funcionarios(){
+
+  const {isOpen, onClose, onOpen} = useDisclosure();
+
   return(
     <SimpleGrid spacing={"10"} flex="1">
       <Box
@@ -16,7 +20,7 @@ export function Funcionarios(){
           <Heading size={"md"} fontWeight="normal" >Funcionários</Heading>
           
           <Box>
-            <Button as="a" size={"lg"} fontSize="sm" colorScheme={"blue"} cursor={"pointer"} leftIcon={<Icon as={RiAddLine} fontSize="20"></Icon>}>
+            <Button as="a" size={"lg"} fontSize="sm" colorScheme={"blue"} cursor={"pointer"} leftIcon={<Icon as={RiAddLine} onClick={onOpen} fontSize="20"></Icon>}>
                 Novo
             </Button>
           </Box>
@@ -25,10 +29,10 @@ export function Funcionarios(){
         <Lista />
       </Box>
 
-      {/* <ModalForm 
+      <ModalForm 
         isOpen={isOpen}
         onClose={onClose}
-      /> */}
+      />
     </SimpleGrid>
   )
 }
