@@ -1,5 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { FuncionariosContextProvider } from "./contexts/FuncionariosContext";
 import { LancamentosContextProvider } from "./contexts/LancamentosContext";
 import { ProdutosContextProvider } from "./contexts/ProdutosContext";
 import { SidebarDrawerProvider } from "./contexts/SidebarDrawerContext";
@@ -11,7 +12,9 @@ export function App() {
       <SidebarDrawerProvider>
         {/* <LancamentosContextProvider> */}
           <ProdutosContextProvider>
-          <Router />
+            <FuncionariosContextProvider>
+              <Router />
+            </FuncionariosContextProvider>
           </ProdutosContextProvider>
         {/* </LancamentosContextProvider> */}
       </SidebarDrawerProvider>

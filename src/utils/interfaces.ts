@@ -1,8 +1,12 @@
 export interface Funcionario {
   id: string;
   nome: string;
-  sobrenome: string;
-  funcao: string;
+  cargo: string;
+  status: "ATIVO" | "BLOQUEADO";
+  usuario_id: number;
+  created_at: Date;
+  updated_at: Date;
+  usuario: Usuario;
 }
 
 export interface Lancamento {
