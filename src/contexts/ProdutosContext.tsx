@@ -1,10 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { useEffect } from "react";
 import { createContext, ReactNode, useReducer } from "react";
 import { criarNovoProdutoAction, deletarProdutoAction, initialStateProdutosAction, isLoadingAppAction, ProdutosData } from "../reducers/produtos/action";
 import { ProdutosReducer } from "../reducers/produtos/reducer";
 import { api } from "../services/api";
-import {toast} from 'react-toastify';
 import { useToast } from "@chakra-ui/react";
 
 export interface ProdutosContextData {

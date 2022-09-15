@@ -20,7 +20,7 @@ export function Funcionarios(){
           <Heading size={"md"} fontWeight="normal" >Funcionários</Heading>
           
           <Box>
-            <Button as="a" size={"lg"} fontSize="sm" colorScheme={"blue"} cursor={"pointer"} leftIcon={<Icon as={RiAddLine} onClick={onOpen} fontSize="20"></Icon>}>
+            <Button onClick={onOpen} as="a" size={"lg"} fontSize="sm" colorScheme={"blue"} cursor={"pointer"} leftIcon={<Icon as={RiAddLine} onClick={onOpen} fontSize="20"></Icon>}>
                 Novo
             </Button>
           </Box>

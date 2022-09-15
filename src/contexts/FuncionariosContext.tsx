@@ -1,9 +1,14 @@
-import { Axios, AxiosResponse } from "axios";
+import { useToast } from "@chakra-ui/react";
+import { Axios, AxiosError, AxiosResponse } from "axios";
 import { createContext, ReactNode, useEffect, useReducer } from "react";
 import { criarFuncionarioAction, initialStateFuncionarios } from "../reducers/funcionarios/actions";
 import { funcionariosReducer } from "../reducers/funcionarios/reducer";
 import { api } from "../services/api";
 import {Funcionario} from "../utils/interfaces";
+
+interface AxiosErrorResponse {
+  message: string;
+}
 
 export interface FuncionarioState {
   data: Funcionario[];
@@ -29,6 +34,7 @@ export const FuncionariosContext = createContext({} as FuncionariosContextData);
 
 export function FuncionariosContextProvider({children}: FuncionariosContextProviderProps){
   
+  const toast = useToast();
   const [funcionarioState, dispatch] = useReducer(funcionariosReducer, {
     data: [],
     isLoading: true,
@@ -37,13 +43,47 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
   async function getFuncionarios(){
     const response = await api.get("funcionarios").then((response: AxiosResponse<{ data: Funcionario[] }>) => {
       dispatch(initialStateFuncionarios(response.data.data));
-    });
+    }).catch((error: AxiosError<AxiosErrorResponse>) => {
+      console.log(error);
+      toast({
+        title: 'Erro na requisição',
+        description: `${error.message} - ${error.response?.data.message}`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    });;
   }
   
   async function criarFuncionario({nome, cargo}: newFuncionarioProps){
-    const response = await api.post("funcionarios", {nome, cargo, usuario_id: 2}).then((response: AxiosResponse) => {
+    const response = await api.post("funcionarios/register", {nome, cargo, usuario_id: 2}).then((response: AxiosResponse) => {
       dispatch(criarFuncionarioAction(response.data))
+      toast({
+        title: 'Sucesso!',
+        description: `${nome} adicionado com sucesso!`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    }).catch((error: AxiosError<AxiosErrorResponse>) => {
+      console.log(error);
+      toast({
+        title: 'Erro na requisição',
+        description: `${error.message} - ${error.response?.data.message}`,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
     });
+  }
+
+  async function deleteFuncionarios(funcionario: Funcionario){
+    const response = await api.delete(`funcionarios/${funcionario.id}`).then((response: AxiosResponse) => {
+        
+    })
   }
 
   return(

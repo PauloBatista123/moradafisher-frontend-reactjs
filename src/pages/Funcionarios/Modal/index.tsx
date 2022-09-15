@@ -2,11 +2,9 @@ import { Box, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerCont
 import { RiSave3Line } from "react-icons/ri";
 import {useForm} from 'react-hook-form';
 import * as zod from 'zod';
-import { TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
-import { FuncionariosContext } from "../../../contexts/FuncionariosContext";
 import { Input } from "../../../components/Form/Input";
+import { useFuncionarios } from "../../../hooks/useFuncionarios";
 
 
 interface ModalProps {
@@ -31,11 +29,14 @@ export function ModalForm({isOpen, onClose}: ModalProps){
     defaultValues: { nome: undefined, cargo: undefined }
   });
 
-  const {register, formState: {errors}, handleSubmit} = newFormData;
-  const {funcionarioState: {isLoading}, criarFuncionario} = useContext(FuncionariosContext);
+  const {register, formState: {errors}, handleSubmit, reset} = newFormData;
+  const {criarFuncionario, isLoading} = useFuncionarios();
+  
 
   function createFormFuncionario(data: newFormData) {
     criarFuncionario(data);
+    onClose();
+    reset();
   }
 
   return(
