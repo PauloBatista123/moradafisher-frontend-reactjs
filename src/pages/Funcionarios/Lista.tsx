@@ -1,14 +1,18 @@
 import { Badge, Flex, IconButton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
-import { Fragment, useContext } from "react";
+import { Fragment, useEffect } from "react";
 import { BsTrash } from "react-icons/bs";
-import { FuncionariosContext } from "../../contexts/FuncionariosContext";
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { SkeletonLista } from "./SkeletonLista";
+import { useFuncionarios } from "../../hooks/useFuncionarios";
 
 export function Lista(){
 
-  const {funcionarioState: {data, isLoading}} = useContext(FuncionariosContext);
+  const {isLoading, funcionarios, getFuncionarios} = useFuncionarios();
+
+  useEffect(() => {
+    getFuncionarios();
+  }, [])
 
   if(isLoading){
     return (
@@ -31,7 +35,7 @@ export function Lista(){
         <Tbody>
         
           {
-            data?.map((funcionario) => (
+            funcionarios?.map((funcionario) => (
               <Tr 
               _hover={{
                 bgColor: "blackAlpha.50"

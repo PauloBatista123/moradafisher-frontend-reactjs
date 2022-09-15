@@ -13,6 +13,7 @@ export interface FuncionarioState {
 interface FuncionariosContextData {
   funcionarioState: FuncionarioState;
   criarFuncionario: (data: newFuncionarioProps) => void;
+  getFuncionarios: () => void;
 }
 
 interface newFuncionarioProps {
@@ -33,16 +34,12 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
     isLoading: true,
   });
 
-  useEffect(() => {
-    (
-      async () => {
-        const response = await api.get("funcionarios").then((response: AxiosResponse<{ data: Funcionario[] }>) => {
-          dispatch(initialStateFuncionarios(response.data.data));
-        });
-      }
-    )()
-  }, []);
-
+  async function getFuncionarios(){
+    const response = await api.get("funcionarios").then((response: AxiosResponse<{ data: Funcionario[] }>) => {
+      dispatch(initialStateFuncionarios(response.data.data));
+    });
+  }
+  
   async function criarFuncionario({nome, cargo}: newFuncionarioProps){
     const response = await api.post("funcionarios", {nome, cargo, usuario_id: 2}).then((response: AxiosResponse) => {
       dispatch(criarFuncionarioAction(response.data))
@@ -50,7 +47,7 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
   }
 
   return(
-    <FuncionariosContext.Provider value={{ funcionarioState, criarFuncionario }}>
+    <FuncionariosContext.Provider value={{ funcionarioState, criarFuncionario, getFuncionarios }}>
       {children}
     </FuncionariosContext.Provider>
   )
