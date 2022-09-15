@@ -17,7 +17,7 @@ interface ModalProps {
 // validação dos dados
 const newFormValidation = zod.object({
   nome: zod.string({required_error: "Informe o nome"}).min(1, {message:"Informe o nome"}),
-  cargo: zod.string({required_error: "Informe o cargo"}).min(1,  {message:"Informe o nome"}),
+  cargo: zod.string({required_error: "Informe o cargo"}).min(1,  {message:"Informe o cargo"}),
 });
 
 //tipagem dos dados
@@ -32,10 +32,10 @@ export function ModalForm({isOpen, onClose}: ModalProps){
   });
 
   const {register, formState: {errors}, handleSubmit} = newFormData;
-  const {funcionarioState: {isLoading}} = useContext(FuncionariosContext);
+  const {funcionarioState: {isLoading}, criarFuncionario} = useContext(FuncionariosContext);
 
   function createFormFuncionario(data: newFormData) {
-
+    criarFuncionario(data);
   }
 
   return(

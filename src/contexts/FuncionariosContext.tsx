@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse } from "axios";
 import { createContext, ReactNode, useEffect, useReducer } from "react";
-import { initialStateFuncionarios } from "../reducers/funcionarios/actions";
+import { criarFuncionarioAction, initialStateFuncionarios } from "../reducers/funcionarios/actions";
 import { funcionariosReducer } from "../reducers/funcionarios/reducer";
 import { api } from "../services/api";
 import {Funcionario} from "../utils/interfaces";
@@ -11,7 +11,13 @@ export interface FuncionarioState {
 }
 
 interface FuncionariosContextData {
-  funcionarioState: FuncionarioState
+  funcionarioState: FuncionarioState;
+  criarFuncionario: (data: newFuncionarioProps) => void;
+}
+
+interface newFuncionarioProps {
+  nome: string;
+  cargo: string;
 }
 
 interface FuncionariosContextProviderProps {
@@ -35,10 +41,16 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
         });
       }
     )()
-  }, [])
+  }, []);
+
+  async function criarFuncionario({nome, cargo}: newFuncionarioProps){
+    const response = await api.post("funcionarios", {nome, cargo, usuario_id: 2}).then((response: AxiosResponse) => {
+      dispatch(criarFuncionarioAction(response.data))
+    });
+  }
 
   return(
-    <FuncionariosContext.Provider value={{ funcionarioState }}>
+    <FuncionariosContext.Provider value={{ funcionarioState, criarFuncionario }}>
       {children}
     </FuncionariosContext.Provider>
   )

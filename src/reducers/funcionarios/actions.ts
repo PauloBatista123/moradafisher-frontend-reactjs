@@ -2,7 +2,8 @@ import { FuncionarioState } from "../../contexts/FuncionariosContext";
 import { Funcionario } from "../../utils/interfaces";
 
 export enum funcionariosActionTypes {
-  INITIAL_STATE_FUNCIONARIOS = "INITIAL_STATE_FUNCIONARIOS"
+  INITIAL_STATE_FUNCIONARIOS = "INITIAL_STATE_FUNCIONARIOS",
+  CREATE_FUNCIONARIOS = "CREATE_FUNCIONARIOS"
 }
 
 export function initialStateFuncionarios(initialState: Funcionario[]){
@@ -10,6 +11,15 @@ export function initialStateFuncionarios(initialState: Funcionario[]){
     type: funcionariosActionTypes.INITIAL_STATE_FUNCIONARIOS,
     payload: {
       initialState
+    }
+  }
+}
+
+export function criarFuncionarioAction({data, isLoading = true}: FuncionarioState){
+  return {
+    type: funcionariosActionTypes.CREATE_FUNCIONARIOS,
+    payload: {
+      data, isLoading
     }
   }
 }

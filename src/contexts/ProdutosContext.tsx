@@ -11,6 +11,7 @@ export interface ProdutosContextData {
   produtoState: ProdutosData;
   criarNovoProduto: (data: newFormProdutoData) => void;
   deletarProduto: (id: number) => void;
+  getUsers: () => void;
 }
 
 interface ProdutosContextProviderProps {
@@ -31,13 +32,11 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
     isLoading: true,
   });
 
-  useEffect(() => {
-
-    const reponse = api.get("produtos").then((response: AxiosResponse) => {
+  async function getUsers(){
+    const reponse = await api.get("produtos").then((response: AxiosResponse) => {
       dispatch(initialStateProdutosAction(response.data));
     });
-
-  }, [])
+  }
 
   async function criarNovoProduto({nome, unidade}: newFormProdutoData){
     dispatch(isLoadingAppAction());
@@ -91,7 +90,7 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
   }
 
   return(
-    <ProdutosContext.Provider value={{ produtoState, criarNovoProduto, deletarProduto }}>
+    <ProdutosContext.Provider value={{ produtoState, criarNovoProduto, deletarProduto, getUsers }}>
       {children}
     </ProdutosContext.Provider>
   )

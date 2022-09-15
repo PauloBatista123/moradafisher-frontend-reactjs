@@ -5,7 +5,7 @@ import { Sidebar } from "../components/Sidebar";
 
 export function Dashboard(){
   return (
-    <Flex direction="column" h="100vh">
+    <Flex direction="column" h="100%">
       <Header />
 
       <Flex w="100%" my="6" mx="auto" px="6">

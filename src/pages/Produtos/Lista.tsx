@@ -1,20 +1,24 @@
 import { Badge, Button, Flex, IconButton, Skeleton, SkeletonText, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
-import { ProdutosContext } from "../../contexts/ProdutosContext";
+import { useProdutos } from "../../hooks/useProdutos";
 import { Produtos } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
 import { SkeletonLista } from "./SkeletonLista";
 
 export function Lista() {
 
-  const {produtoState} = useContext(ProdutosContext);
+  const {produtos, getUsers, isLoading} = useProdutos();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [produtoDelete, setProdutoDelete] = useState<Produtos | undefined>(undefined);
 
-  if(produtoState.isLoading){
+  useEffect(() => {
+    getUsers();
+  }, [])
+
+  if(isLoading){
     return (
       <SkeletonLista />  
     )
@@ -44,7 +48,7 @@ export function Lista() {
         <Tbody>
         
           {
-            produtoState.data.map((produto) => (
+            produtos.map((produto) => (
               <Tr 
               _hover={{
                 bgColor: "blackAlpha.50"

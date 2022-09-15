@@ -10,6 +10,13 @@ export function funcionariosReducer(state: FuncionarioState, action: any){
         draft.data = action.payload.initialState;
         draft.isLoading = false;
       })
+    };
+
+    case funcionariosActionTypes.CREATE_FUNCIONARIOS: {
+      return produce(state, draft => {
+        draft.data.push(action.payload.data);
+        draft.isLoading = false;
+      });
     }
    
     default: return state;
