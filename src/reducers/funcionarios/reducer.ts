@@ -17,7 +17,16 @@ export function funcionariosReducer(state: FuncionarioState, action: any){
         draft.data.push(action.payload.data);
         draft.isLoading = false;
       });
-    }
+    };
+
+    case funcionariosActionTypes.DELETE_FUNCIONARIOS: {
+      const findIndex = state.data.findIndex(func => func.id === action.payload.data.id);
+
+      return produce(state, draft => {
+        draft.data.splice(findIndex, 1);
+        draft.isLoading = false;
+      });
+    };
    
     default: return state;
   }

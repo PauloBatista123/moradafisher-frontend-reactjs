@@ -1,14 +1,18 @@
-import { Badge, Flex, IconButton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
-import { Fragment, useEffect } from "react";
+import { Badge, Flex, IconButton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { Fragment, useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { SkeletonLista } from "./SkeletonLista";
 import { useFuncionarios } from "../../hooks/useFuncionarios";
+import { Funcionario } from "../../utils/interfaces";
+import { AlertDialogDelete } from "./AlertDialogDelete";
 
 export function Lista(){
 
-  const {isLoading, funcionarios, getFuncionarios} = useFuncionarios();
+  const {isLoading, funcionarios, getFuncionarios, deleteFuncionario} = useFuncionarios();
+  const [funcionarioDelete, setFuncionarioDelete] = useState<Funcionario>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     getFuncionarios();
@@ -22,6 +26,17 @@ export function Lista(){
 
   return (
     <Fragment>
+      {funcionarioDelete && (
+          <AlertDialogDelete 
+          isOpen={isOpen}
+          mensagem={"Deseja deletar o funcionário?"}
+          onClose={onClose}
+          titulo={"Deletar Funcionário"}
+          funcionario={funcionarioDelete}
+          key={"deletar-funcionario"}
+        />
+      )}
+
       <TableContainer>
       <Table variant='simple'>
         <Thead>
@@ -74,8 +89,8 @@ export function Lista(){
                     icon={<BsTrash />}
                     aria-label="deletar"
                     onClick={() => {
-                      // onOpen();
-                      // setProdutoDelete(funcionario);
+                      onOpen();
+                      setFuncionarioDelete(funcionario);
                     }}
                   />
                 </Td>
