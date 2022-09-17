@@ -1,5 +1,7 @@
+import { LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { cloneElement, ReactElement } from "react";
 import { NavLink, NavLinkProps, useLocation } from "react-router-dom";
+import styles from './styles.module.css';
 
 interface ActiveLinksProps extends NavLinkProps{
   children: ReactElement;
@@ -25,9 +27,23 @@ export function ActiveLink({children, souldMatchExactHref = false, ...rest}: Act
 
   return (
     <NavLink {...rest}>
-      {cloneElement(children, {
-        color: isActive ? 'blue.400' : 'gray.500'
-      })}
+      <LinkBox 
+        borderBottom={"2px solid transparent"}
+        transitionProperty="border-bottom"
+        transitionDuration={"0.2s"}
+        transitionTimingFunction={"ease-in"}
+        sx={{
+          '&:hover': {
+            borderBottom: '2px solid',
+            borderColor: 'gray.200'
+          }
+        }}>
+        <LinkOverlay >
+        {cloneElement(children, {
+          color: isActive ? 'blue.400' : 'gray.500'
+        })}
+        </LinkOverlay>
+      </LinkBox>
     </NavLink>
   )
 }
