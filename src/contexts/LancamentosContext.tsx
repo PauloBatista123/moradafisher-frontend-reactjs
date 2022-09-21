@@ -8,6 +8,7 @@ import { Lancamento, newLancamentoProps } from '../utils/interfaces';
 interface LancamentosContextData {
   lancamentoState: LancamentoStateData,
   createNewLancamento: (newLancamento: newLancamentoProps) => void,
+  loadLancamentos: () => void,
 }
 
 interface LancamentosContextProps {
@@ -21,16 +22,12 @@ export function LancamentosContextProvider({children}: LancamentosContextProps){
     lancamentos: []
   })
 
-  useEffect(() => {
-    (
-      async function(){
-        const response = await api.get("lancamentos").then((response: AxiosResponse) => {
-          dispatch(initialStateLancamentoAction(response.data));
-        })
-      }
-    )();
-  }, [])
-
+  async function loadLancamentos(){
+    const response = await api.get("lancamentos").then((response: AxiosResponse) => {
+      dispatch(initialStateLancamentoAction(response.data));
+    })
+  }
+    
   async function createNewLancamento(newLancamento: newLancamentoProps){
     const response = await api.post("lancamentos", newLancamento).then((response: AxiosResponse) => {
       dispatch(createNewLancamentoAction(response.data));
@@ -38,7 +35,7 @@ export function LancamentosContextProvider({children}: LancamentosContextProps){
   }
 
   return (
-    <LancamentosContext.Provider value={{ lancamentoState, createNewLancamento }}>
+    <LancamentosContext.Provider value={{ lancamentoState, createNewLancamento, loadLancamentos }}>
       {children}
     </LancamentosContext.Provider>
   )
