@@ -11,9 +11,10 @@ export function Lancamentos(){
     <SimpleGrid spacing={"10"} flex="1">
       <Box
         borderRadius={8}
-        bg="gray.80"
+        bg="whiteAlpha.100"
         p={["6","8"]}
         as="form"
+        shadow={"base"}
       >
         <Flex justify="space-between" align="center">
           <Heading size={"md"} fontWeight="normal" >Lançamentos</Heading>
@@ -28,7 +29,7 @@ export function Lancamentos(){
         <ListaLancamentos />
       </Box>
 
-      <ModalForm isOpen={isOpen} onClose={onClose}/>
+      {/* <ModalForm isOpen={isOpen} onClose={onClose}/> */}
     </SimpleGrid>
       
   )
