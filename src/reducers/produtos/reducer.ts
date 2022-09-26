@@ -9,7 +9,12 @@ export function ProdutosReducer(state: ProdutosData, action: any){
     case produtosActionTypes.IS_LOADING: {
       return produce(state, draft => {
         draft.isLoading = true;
-        console.log(draft.isLoading);
+      })
+    }
+
+    case produtosActionTypes.IS_NOT_LOADING: {
+      return produce(state, draft => {
+        draft.isLoading = false;
       })
     }
     

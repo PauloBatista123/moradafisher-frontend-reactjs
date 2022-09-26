@@ -5,7 +5,8 @@ export enum produtosActionTypes {
   INITIAL_STATE_PRODUTOS = "INITIAL_STATE_PRODUTOS",
   CRIAR_NOVO_PRODUTO = "CRIAR_NOVO_PRODUTO",
   DELETAR_PRODUTO = "DELETAR_PRODUTO",
-  IS_LOADING = "IS_LOADING"
+  IS_LOADING = "IS_LOADING",
+  IS_NOT_LOADING = "IS_NOT_LOADING",
 }
 
 export interface ProdutosData {
@@ -46,5 +47,11 @@ export function deletarProdutoAction(id: number, isLoading = true){
 export function isLoadingAppAction(){
   return {
     type: produtosActionTypes.IS_LOADING,
+  }
+}
+
+export function isNotLoadingAppAction(){
+  return {
+    type: produtosActionTypes.IS_NOT_LOADING
   }
 }

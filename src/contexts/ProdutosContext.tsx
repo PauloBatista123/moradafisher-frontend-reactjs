@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { createContext, ReactNode, useReducer } from "react";
-import { criarNovoProdutoAction, deletarProdutoAction, initialStateProdutosAction, isLoadingAppAction, ProdutosData } from "../reducers/produtos/action";
+import { criarNovoProdutoAction, deletarProdutoAction, initialStateProdutosAction, isLoadingAppAction, isNotLoadingAppAction, ProdutosData } from "../reducers/produtos/action";
 import { ProdutosReducer } from "../reducers/produtos/reducer";
 import { api } from "../services/api";
 import { useToast } from "@chakra-ui/react";
@@ -88,7 +88,6 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
         position: "top-right",
       })
     }).catch((error: errorAxios) => {
-      console.log(error);
       toast({
         title: 'Erro na requisição',
         description: `${error.message} - ${error.response.data.error}`,
@@ -97,6 +96,8 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
         isClosable: true,
         position: "top-right",
       })
+
+      dispatch(isNotLoadingAppAction());
     });
   }
 
