@@ -54,7 +54,7 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
         isClosable: true,
         position: "top-right",
       })
-    });;
+    });
   }
   
   async function criarFuncionario({nome, cargo}: newFuncionarioProps){

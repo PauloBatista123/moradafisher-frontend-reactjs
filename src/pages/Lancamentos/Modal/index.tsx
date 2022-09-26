@@ -12,6 +12,7 @@ import { Funcionario } from '../../../utils/interfaces';
 import { LancamentosContext } from '../../../contexts/LancamentosContext';
 import { Input } from '../../../components/Form/Input';
 import { Select } from '../../../components/Form/Select';
+import { useFuncionarios } from '../../../hooks/useFuncionarios';
 
 interface ModalProps {
   isOpen: boolean;
@@ -28,8 +29,8 @@ type newFormData = zod.infer<typeof newFormValidation>
 
 export function ModalForm({isOpen, onClose}: ModalProps){
 
+  const {funcionarios} = useFuncionarios();
   const {createNewLancamento} = useContext(LancamentosContext)
-  const [funcionarios, setFuncionarios] = useState<Funcionario[]>([]);
   const newFormLancamento = useForm<newFormData>({
     resolver: zodResolver(newFormValidation),
     defaultValues: {
@@ -41,24 +42,13 @@ export function ModalForm({isOpen, onClose}: ModalProps){
 
   const {handleSubmit, register, formState: {errors}, setValue, watch, reset} = newFormLancamento;
 
-  useEffect(() => {
-    (
-     async () => {
-        const response = await api.get("funcionarios").then((response: AxiosResponse) => {
-          setFuncionarios(response.data);
-        })
-      }
-    )();
-  }, []);
-
-
   const options = funcionarios.map(func => {
     return {
       value: func.id,
       optionText: func.nome,
     }              
   })
-
+  console.log(options);
   function createFormLancamento(data: newFormData){
     createNewLancamento(data)
     reset();

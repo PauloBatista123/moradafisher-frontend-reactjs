@@ -1,6 +1,5 @@
 import { Box, Button, Divider, Flex, Heading, Icon, SimpleGrid, useDisclosure, VStack } from "@chakra-ui/react";
 import { RiAddLine } from "react-icons/ri";
-import { Input } from "../../components/Form/Input";
 import { ListaLancamentos } from "./ListaLancamentos";
 import { ModalForm } from "./Modal";
 
@@ -29,7 +28,7 @@ export function Lancamentos(){
         <ListaLancamentos />
       </Box>
 
-      {/* <ModalForm isOpen={isOpen} onClose={onClose}/> */}
+      <ModalForm isOpen={isOpen} onClose={onClose}/>
     </SimpleGrid>
       
   )
