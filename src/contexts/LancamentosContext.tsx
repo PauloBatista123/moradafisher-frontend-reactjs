@@ -24,7 +24,7 @@ export function LancamentosContextProvider({children}: LancamentosContextProps){
 
   async function loadLancamentos(){
     const response = await api.get("lancamentos").then((response: AxiosResponse) => {
-      dispatch(initialStateLancamentoAction(response.data));
+      dispatch(initialStateLancamentoAction(response.data.data));
     })
   }
     

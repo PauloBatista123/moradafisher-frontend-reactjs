@@ -21,6 +21,17 @@ interface newFormProdutoData {
   unidade: string;
 }
 
+interface errorAxios {
+  response: {
+    data: {
+      error: string;
+      status: boolean;
+      statusCode: number;
+    }
+  },
+  message: string;
+}
+
 export const ProdutosContext = createContext({} as ProdutosContextData);
 
 export function ProdutosContextProvider({children}: ProdutosContextProviderProps){
@@ -50,6 +61,7 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
         position: "top-right",
       })
     }).catch((error: AxiosError) => {
+      
       toast({
         title: 'Erro na requisição',
         description: `${error.message}`,
@@ -75,10 +87,11 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
         isClosable: true,
         position: "top-right",
       })
-    }).catch((error: AxiosError) => {
+    }).catch((error: errorAxios) => {
+      console.log(error);
       toast({
         title: 'Erro na requisição',
-        description: `${error.message}`,
+        description: `${error.message} - ${error.response.data.error}`,
         status: 'error',
         duration: 9000,
         isClosable: true,

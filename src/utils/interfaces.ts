@@ -11,10 +11,13 @@ export interface Funcionario {
 
 export interface Lancamento {
   id: string;
-  peso: number;
+  peso: string;
   funcionario: Funcionario;
-  type: 'entrada' | 'saida' | undefined;
-  dataLancamento : string;
+  tipo: 'entrada' | 'saida' | undefined;
+  created_at : string;
+  updated_at : string;
+  usuario: Usuario;
+  produto: Produtos;
 }
 
 export type newLancamentoProps = {
