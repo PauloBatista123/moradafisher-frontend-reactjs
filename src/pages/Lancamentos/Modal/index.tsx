@@ -13,6 +13,8 @@ import { LancamentosContext } from '../../../contexts/LancamentosContext';
 import { Input } from '../../../components/Form/Input';
 import { Select } from '../../../components/Form/Select';
 import { useFuncionarios } from '../../../hooks/useFuncionarios';
+import { useLancamentos } from '../../../hooks/useLancamentos';
+import { useProdutos } from '../../../hooks/useProdutos';
 
 interface ModalProps {
   isOpen: boolean;
@@ -21,8 +23,9 @@ interface ModalProps {
 
 const newFormValidation = zod.object({
   peso: zod.number({invalid_type_error: "O tipo deve ser número"}).positive({message: "Informe um valor maior que 0"}),
-  funcionario: zod.number({required_error: "O funcionário é obrigatório"}).positive({message: "O funcionário é obrigatório"}),
-  type: zod.string({invalid_type_error: "Selecione o tipo de entrada", description: "Selecione o tipo de entrada", }).min(1, {message: "Selecione o tipo de entrada"})
+  funcionario_id: zod.number({required_error: "O funcionário é obrigatório"}).positive({message: "O funcionário é obrigatório"}),
+  produto_id: zod.number({required_error: "O produto é obrigatório"}).positive({message: "O produto é obrigatório"}),
+  tipo: zod.string({invalid_type_error: "Selecione o tipo de entrada", description: "Selecione o tipo de entrada", }).min(1, {message: "Selecione o tipo de entrada"})
 })
 
 type newFormData = zod.infer<typeof newFormValidation>
@@ -30,32 +33,41 @@ type newFormData = zod.infer<typeof newFormValidation>
 export function ModalForm({isOpen, onClose}: ModalProps){
 
   const {funcionarios} = useFuncionarios();
-  const {createNewLancamento} = useContext(LancamentosContext)
+  const {create} = useLancamentos();
+  const {produtos} = useProdutos();
+
   const newFormLancamento = useForm<newFormData>({
     resolver: zodResolver(newFormValidation),
     defaultValues: {
-      funcionario: undefined,
+      funcionario_id: undefined,
       peso: 0,
-      type: undefined
+      tipo: undefined
     }
   })
 
   const {handleSubmit, register, formState: {errors}, setValue, watch, reset} = newFormLancamento;
 
-  const options = funcionarios.map(func => {
+  const optionsFuncionario = funcionarios.map(func => {
     return {
       value: func.id,
       optionText: func.nome,
-    }              
-  })
-  console.log(options);
+    }
+  });
+
+  const optionsProdutos = produtos.map(produto => {
+    return {
+      value: produto.id,
+      optionText: produto.nome,
+    }
+  });
+
   function createFormLancamento(data: newFormData){
-    createNewLancamento(data)
+    create(data)
     reset();
     onClose();
   }
 
-  const type = watch("type");
+  const tipo = watch("tipo");
 
   return (
     <Drawer onClose={onClose} isOpen={isOpen} size={'xl'}>
@@ -75,13 +87,24 @@ export function ModalForm({isOpen, onClose}: ModalProps){
                 size={'lg'}
               />
             <Select
-              id='funcionario'
+              id='funcionario_id'
               label="Funcionário"
               options={
-                options
+                optionsFuncionario
               }
-              {...register("funcionario", {valueAsNumber: true})}
-              error={errors.funcionario}
+              {...register("funcionario_id", {valueAsNumber: true})}
+              error={errors.funcionario_id}
+              size={'lg'}
+              
+            />
+            <Select
+              id='produto_id'
+              label="Produto"
+              options={
+                optionsProdutos
+              }
+              {...register("produto_id", {valueAsNumber: true})}
+              error={errors.produto_id}
               size={'lg'}
               
             />
@@ -92,40 +115,40 @@ export function ModalForm({isOpen, onClose}: ModalProps){
           <SimpleGrid mt={"8"} spacing={["2","4"]} w={"100%"} columns={2}>
             <Button
                 type='button'
-                color={type === 'entrada' ? 'white' : "blue.900"}
-                bgColor={type === 'entrada' ? 'blue.900' : "transparent"}
+                color={tipo === 'entrada' ? 'white' : "blue.900"}
+                bgColor={tipo === 'entrada' ? 'blue.900' : "transparent"}
                 size={'lg'}
                 border={"1px"}
                 _hover={{
                   bgColor: "blue.900",
                   color: "white"
                 }}
-                onClick={() => setValue("type", "entrada")}
-                leftIcon={type === 'entrada' ? <BsCheckCircle /> : <BsCircle />}
+                onClick={() => setValue("tipo", "entrada")}
+                leftIcon={tipo === 'entrada' ? <BsCheckCircle /> : <BsCircle />}
               >
               Entrada
             </Button>
             <Button
                 type='button'
-                color={type === 'saida' ? 'white' : "red.900"}
-                bgColor={type === 'saida' ? 'red.900' : "transparent"}
+                color={tipo === 'saida' ? 'white' : "red.900"}
+                bgColor={tipo === 'saida' ? 'red.900' : "transparent"}
                 size={'lg'}
                 border={"1px"}
                 _hover={{
                   bgColor: "red.900",
                   color: "white"
                 }}
-                onClick={() => setValue("type", "saida")}
-                leftIcon={type === 'saida' ? <BsCheckCircle /> : <BsCircle />}
+                onClick={() => setValue("tipo", "saida")}
+                leftIcon={tipo === 'saida' ? <BsCheckCircle /> : <BsCircle />}
               >
               Saída
             </Button>
             <Input 
               hidden
-              id='type'
+              id='tipo'
               type={"tex"}
-              {...register("type")}
-              error={errors.type}
+              {...register("tipo")}
+              error={errors.tipo}
             />
           </SimpleGrid>
           

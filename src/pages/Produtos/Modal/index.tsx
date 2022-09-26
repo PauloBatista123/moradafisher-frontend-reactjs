@@ -6,6 +6,7 @@ import * as zod from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod'
 import { RiSave3Line } from 'react-icons/ri';
 import { ProdutosContext } from '../../../contexts/ProdutosContext';
+import { useProdutos } from '../../../hooks/useProdutos';
 
 interface ModalProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ type newFormData = zod.infer<typeof newFormValidation>
 
 export function ModalForm({isOpen, onClose}: ModalProps){
 
-  const {criarNovoProduto, produtoState: {isLoading} } = useContext(ProdutosContext);
+  const {criarNovoProduto, isLoading} = useProdutos();
 
   const newFormLancamento = useForm<newFormData>({
     resolver: zodResolver(newFormValidation),

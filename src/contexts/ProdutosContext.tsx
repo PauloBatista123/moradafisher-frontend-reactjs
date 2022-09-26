@@ -1,15 +1,16 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { createContext, ReactNode, useReducer } from "react";
+import { ReactNode, useCallback, useReducer } from "react";
 import { criarNovoProdutoAction, deletarProdutoAction, initialStateProdutosAction, isLoadingAppAction, isNotLoadingAppAction, ProdutosData } from "../reducers/produtos/action";
 import { ProdutosReducer } from "../reducers/produtos/reducer";
 import { api } from "../services/api";
 import { useToast } from "@chakra-ui/react";
+import { createContext } from "use-context-selector";
 
 export interface ProdutosContextData {
   produtoState: ProdutosData;
   criarNovoProduto: (data: newFormProdutoData) => void;
-  deletarProduto: (id: number) => void;
-  getUsers: () => void;
+  deletarProduto: (id: string) => void;
+  getProdutos: () => void;
 }
 
 interface ProdutosContextProviderProps {
@@ -41,13 +42,13 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
     isLoading: true,
   });
 
-  async function getUsers(){
+  const getProdutos = useCallback(async () => {
     const reponse = await api.get("produtos").then((response: AxiosResponse) => {
       dispatch(initialStateProdutosAction(response.data));
     });
-  }
+  }, []);
 
-  async function criarNovoProduto({nome, unidade}: newFormProdutoData){
+  const criarNovoProduto = useCallback(async ({nome, unidade}: newFormProdutoData) => {
     dispatch(isLoadingAppAction());
 
     const response = await api.post("produtos/register", { nome, unidade, usuario_id: 2 }).then((response: AxiosResponse) => {
@@ -72,13 +73,13 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
       })
     });
 
-  }
+  },[]);
 
-  async function deletarProduto(id: number){
+  const deletarProduto = useCallback(async (id: string) => {
     dispatch(isLoadingAppAction());
     
     const response = await api.delete(`produtos/${id}`).then((response: AxiosResponse) => {
-      dispatch(deletarProdutoAction(id));
+      dispatch(deletarProdutoAction(Number(id)));
       toast({
         title: 'Produto deletado com sucesso',
         description: `Produto removido da lista`,
@@ -99,10 +100,10 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
 
       dispatch(isNotLoadingAppAction());
     });
-  }
+  },[]);
 
   return(
-    <ProdutosContext.Provider value={{ produtoState, criarNovoProduto, deletarProduto, getUsers }}>
+    <ProdutosContext.Provider value={{ produtoState, criarNovoProduto, deletarProduto, getProdutos }}>
       {children}
     </ProdutosContext.Provider>
   )

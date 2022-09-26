@@ -22,12 +22,13 @@ export interface Lancamento {
 
 export type newLancamentoProps = {
   peso: number;
-  funcionario: number;
-  type: string;
+  funcionario_id: number;
+  produto_id: number;
+  tipo: string;
 }
 
 export interface Produtos {
-  id: number;
+  id: string;
   nome: string;
   status: "INATIVO" | "ATIVO";
   unidade: string;

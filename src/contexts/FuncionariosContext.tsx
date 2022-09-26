@@ -1,10 +1,11 @@
 import { useToast } from "@chakra-ui/react";
-import { Axios, AxiosError, AxiosResponse } from "axios";
-import { createContext, ReactNode, useEffect, useReducer } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import { ReactNode, useCallback, useEffect, useReducer } from "react";
 import { criarFuncionarioAction, deletarFuncionarioAction, initialStateFuncionarios } from "../reducers/funcionarios/actions";
 import { funcionariosReducer } from "../reducers/funcionarios/reducer";
 import { api } from "../services/api";
 import {Funcionario} from "../utils/interfaces";
+import {createContext} from 'use-context-selector';
 
 interface AxiosErrorResponse {
   message: string;
@@ -41,11 +42,11 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
     isLoading: true,
   });
 
-  async function getFuncionarios(){
+  const getFuncionarios = useCallback(async () => {
+
     const response = await api.get("funcionarios").then((response: AxiosResponse<{ data: Funcionario[] }>) => {
       dispatch(initialStateFuncionarios(response.data.data));
     }).catch((error: AxiosError<AxiosErrorResponse>) => {
-      console.log(error);
       toast({
         title: 'Erro na requisição',
         description: `${error.message} - ${error.response?.data.message}`,
@@ -55,9 +56,10 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
         position: "top-right",
       })
     });
-  }
+
+  }, [])
   
-  async function criarFuncionario({nome, cargo}: newFuncionarioProps){
+  const criarFuncionario = useCallback(async ({nome, cargo}: newFuncionarioProps) => {
     const response = await api.post("funcionarios/register", {nome, cargo, usuario_id: 2}).then((response: AxiosResponse) => {
       dispatch(criarFuncionarioAction(response.data))
       toast({
@@ -79,7 +81,7 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
         position: "top-right",
       })
     });
-  }
+  }, []);
 
   async function deleteFuncionario(funcionario: Funcionario){
     const response = await api.delete(`funcionarios/${funcionario?.id}`).then((response: AxiosResponse) => {

@@ -1,13 +1,18 @@
-import { useContext } from "react";
 import { ProdutosContext } from "../contexts/ProdutosContext";
+import {useContextSelector} from 'use-context-selector';
 
 export function useProdutos(){
-  const {produtoState, getUsers, deletarProduto, criarNovoProduto} = useContext(ProdutosContext);
-  
+
+  const criarNovoProduto = useContextSelector(ProdutosContext, produto => produto.criarNovoProduto);
+  const getProdutos = useContextSelector(ProdutosContext, produto => produto.getProdutos);
+  const deletarProduto = useContextSelector(ProdutosContext, produto => produto.deletarProduto);
+  const isLoading = useContextSelector(ProdutosContext, produto => produto.produtoState.isLoading);
+  const produtos = useContextSelector(ProdutosContext, produto => produto.produtoState.data);
+    
   return {
-    produtos: produtoState.data,
-    isLoading: produtoState.isLoading,
-    getUsers: getUsers,
+    produtos,
+    isLoading,
+    getProdutos,
     deletarProduto,
     criarNovoProduto
   }

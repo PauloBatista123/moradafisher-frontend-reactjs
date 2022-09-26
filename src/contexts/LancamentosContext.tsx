@@ -28,8 +28,8 @@ export function LancamentosContextProvider({children}: LancamentosContextProps){
     })
   }
     
-  async function createNewLancamento(newLancamento: newLancamentoProps){
-    const response = await api.post("lancamentos", newLancamento).then((response: AxiosResponse) => {
+  async function createNewLancamento({funcionario_id, peso, produto_id, tipo}: newLancamentoProps){
+    const response = await api.post("lancamentos/register", {funcionario_id, peso, produto_id, tipo, usuario_id: 2}).then((response: AxiosResponse) => {
       dispatch(createNewLancamentoAction(response.data));
     })    
   }

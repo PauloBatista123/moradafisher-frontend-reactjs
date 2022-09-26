@@ -1,15 +1,16 @@
 import { useContext } from "react"
 import { FuncionariosContext } from "../contexts/FuncionariosContext"
+import {useContextSelector} from 'use-context-selector';
 
 export function useFuncionarios(){
-  const {criarFuncionario, funcionarioState: {data, isLoading}, getFuncionarios, deleteFuncionario} = useContext(FuncionariosContext);
+  const criarFuncionario = useContextSelector(FuncionariosContext, func => func.criarFuncionario);
+  const getFuncionarios = useContextSelector(FuncionariosContext, func => func.getFuncionarios);
+  const deleteFuncionario = useContextSelector(FuncionariosContext, func => func.deleteFuncionario);
+  const isLoading = useContextSelector(FuncionariosContext, func => func.funcionarioState.isLoading);
+  const funcionarios = useContextSelector(FuncionariosContext, func => func.funcionarioState.data);
   
-  if(data.length <= 0){
-    getFuncionarios();
-  }
-
   return {
-    funcionarios: data,
+    funcionarios,
     isLoading,
     criarFuncionario,
     getFuncionarios,

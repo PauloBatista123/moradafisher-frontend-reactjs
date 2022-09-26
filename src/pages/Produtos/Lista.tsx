@@ -10,12 +10,12 @@ import { SkeletonLista } from "./SkeletonLista";
 
 export function Lista() {
 
-  const {produtos, getUsers, isLoading} = useProdutos();
+  const {produtos, getProdutos, isLoading} = useProdutos();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [produtoDelete, setProdutoDelete] = useState<Produtos | undefined>(undefined);
 
   useEffect(() => {
-    getUsers();
+    getProdutos();
   }, [])
 
   if(isLoading){

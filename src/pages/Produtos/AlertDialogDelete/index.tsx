@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { useRef, RefObject, useEffect, useContext } from 'react';
 import { ProdutosContext } from '../../../contexts/ProdutosContext';
+import { useProdutos } from '../../../hooks/useProdutos';
 import { Produtos } from '../../../utils/interfaces';
 
 interface AlertDialogProps {
@@ -23,7 +24,7 @@ interface AlertDialogProps {
 export function AlertDialogDelete({mensagem, titulo, isOpen, produto, onClose}: AlertDialogProps) {
   
   const cancelRef = useRef<any>();
-  const { deletarProduto, produtoState: {isLoading} } = useContext(ProdutosContext);
+  const {deletarProduto, isLoading} = useProdutos();
 
   return (
     <AlertDialog
@@ -46,7 +47,7 @@ export function AlertDialogDelete({mensagem, titulo, isOpen, produto, onClose}: 
             <Button onClick={onClose}>
               Cancelar
             </Button>
-            <Button colorScheme='red' ml={3} onClickCapture={() => {deletarProduto(produto?.id ?? 0), onClose()}} isLoading={isLoading} loadingText={"Deletando..."}>
+            <Button colorScheme='red' ml={3} onClickCapture={() => {deletarProduto(String(produto?.id)), onClose()}} isLoading={isLoading} loadingText={"Deletando..."}>
               Deletar
             </Button>
           </AlertDialogFooter>
