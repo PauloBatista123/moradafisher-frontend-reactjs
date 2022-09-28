@@ -15,6 +15,7 @@ export function ListaLancamentos(){
         <Thead>
           <Tr>
             <Th>Produto</Th>
+            <Th>Funcionário</Th>
             <Th>Tipo</Th>
             <Th>Informação</Th>
             <Th></Th>
@@ -39,6 +40,11 @@ export function ListaLancamentos(){
                       Medida: {`${lancamento.peso} ${lancamento.produto.unidade}`}
                     </Text>
                   </Flex>
+                </Td>
+                <Td>
+                  <Text>
+                    {lancamento.funcionario.nome}
+                  </Text>
                 </Td>
                 <Td>
                     <Badge colorScheme={lancamento.tipo === 'entrada' ? 'red' : 'green'} fontWeight={"bold"} fontSize={"sm"} padding={"8px"} borderRadius={"6px"}>
