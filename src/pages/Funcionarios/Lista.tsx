@@ -10,13 +10,9 @@ import { AlertDialogDelete } from "./AlertDialogDelete";
 
 export function Lista(){
 
-  const {isLoading, funcionarios, getFuncionarios, deleteFuncionario} = useFuncionarios();
+  const {isLoading, funcionarios} = useFuncionarios();
   const [funcionarioDelete, setFuncionarioDelete] = useState<Funcionario>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  useEffect(() => {
-    getFuncionarios();
-  }, [])
 
   if(isLoading){
     return (

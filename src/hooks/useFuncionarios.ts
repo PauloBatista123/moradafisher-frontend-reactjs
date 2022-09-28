@@ -8,7 +8,7 @@ export function useFuncionarios(){
   const deleteFuncionario = useContextSelector(FuncionariosContext, func => func.deleteFuncionario);
   const isLoading = useContextSelector(FuncionariosContext, func => func.funcionarioState.isLoading);
   const funcionarios = useContextSelector(FuncionariosContext, func => func.funcionarioState.data);
-  
+
   return {
     funcionarios,
     isLoading,

@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ReactNode, useCallback, useReducer } from "react";
+import { ReactNode, useCallback, useEffect, useReducer } from "react";
 import { criarNovoProdutoAction, deletarProdutoAction, initialStateProdutosAction, isLoadingAppAction, isNotLoadingAppAction, ProdutosData } from "../reducers/produtos/action";
 import { ProdutosReducer } from "../reducers/produtos/reducer";
 import { api } from "../services/api";
@@ -42,11 +42,17 @@ export function ProdutosContextProvider({children}: ProdutosContextProviderProps
     isLoading: true,
   });
 
-  const getProdutos = useCallback(async () => {
-    const reponse = await api.get("produtos").then((response: AxiosResponse) => {
-      dispatch(initialStateProdutosAction(response.data));
-    });
+  useEffect(() => {
+    getProdutos();
   }, []);
+
+  const getProdutos = async () => {
+    const response = await api.get("produtos").then((response: AxiosResponse) => {
+      dispatch(initialStateProdutosAction(response.data));
+      console.log(response.data);
+    });
+    console.log(response);
+  };
 
   const criarNovoProduto = useCallback(async ({nome, unidade}: newFormProdutoData) => {
     dispatch(isLoadingAppAction());

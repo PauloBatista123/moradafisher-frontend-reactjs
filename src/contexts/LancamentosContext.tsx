@@ -20,7 +20,13 @@ export const LancamentosContext = createContext({} as LancamentosContextData);
 export function LancamentosContextProvider({children}: LancamentosContextProps){
   const [lancamentoState, dispatch] = useReducer(LancamentoReducer, {
     lancamentos: []
-  })
+  });
+
+  useEffect(() => {
+    if(lancamentoState.lancamentos.length === 0){
+      loadLancamentos();
+    }
+  }, []);
 
   async function loadLancamentos(){
     const response = await api.get("lancamentos").then((response: AxiosResponse) => {

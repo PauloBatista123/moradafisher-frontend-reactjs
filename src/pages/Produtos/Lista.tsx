@@ -10,19 +10,9 @@ import { SkeletonLista } from "./SkeletonLista";
 
 export function Lista() {
 
-  const {produtos, getProdutos, isLoading} = useProdutos();
+  const {produtos, isLoading} = useProdutos();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [produtoDelete, setProdutoDelete] = useState<Produtos | undefined>(undefined);
-
-  useEffect(() => {
-    getProdutos();
-  }, [])
-
-  if(isLoading){
-    return (
-      <SkeletonLista />  
-    )
-  }
 
   return (
 

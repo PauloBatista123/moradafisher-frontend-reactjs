@@ -7,11 +7,7 @@ import { useEffect } from 'react';
 
 export function ListaLancamentos(){
   
-  const { getLancamentos, create, lancamentos} = useLancamentos();
-
-  useEffect(() => {
-    getLancamentos();
-  }, []);
+  const { lancamentos} = useLancamentos();
 
   return (
     <TableContainer>

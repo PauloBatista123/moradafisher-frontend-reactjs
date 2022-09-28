@@ -42,6 +42,10 @@ export function FuncionariosContextProvider({children}: FuncionariosContextProvi
     isLoading: true,
   });
 
+  useEffect(() => {
+    getFuncionarios();
+  }, []);
+
   const getFuncionarios = useCallback(async () => {
 
     const response = await api.get("funcionarios").then((response: AxiosResponse<{ data: Funcionario[] }>) => {
