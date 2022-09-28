@@ -10,6 +10,7 @@ interface LancamentosContextData {
   lancamentoState: LancamentoStateData,
   createNewLancamento: (newLancamento: newLancamentoProps) => void,
   loadLancamentos: () => void,
+  deletarLancamento: (lancamento: Lancamento) => void,
 }
 
 interface LancamentosContextProps {
@@ -67,7 +68,7 @@ export function LancamentosContextProvider({children}: LancamentosContextProps){
   }
 
   return (
-    <LancamentosContext.Provider value={{ lancamentoState, createNewLancamento, loadLancamentos }}>
+    <LancamentosContext.Provider value={{ lancamentoState, createNewLancamento, loadLancamentos, deletarLancamento }}>
       {children}
     </LancamentosContext.Provider>
   )

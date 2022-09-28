@@ -3,17 +3,32 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { BsTrash, BsTrashFill } from 'react-icons/bs';
 import ptBR from 'date-fns/locale/pt-BR'
 import { useLancamentos } from '../../hooks/useLancamentos';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Lancamento } from "../../utils/interfaces";
+import { AlertDialogDelete } from "./AlertDialogDelete";
 
 export function ListaLancamentos(){
   
   const { lancamentos} = useLancamentos();
+  const [lancamentoDelete, setLancamentoDelte] = useState<Lancamento>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <TableContainer>
+      {lancamentoDelete && (
+          <AlertDialogDelete 
+          isOpen={isOpen}
+          mensagem={"Deseja deletar o lancamento?"}
+          onClose={onClose}
+          titulo={"Deletar Lancamento"}
+          lancamento={lancamentoDelete}
+          key={"deletar-lancamento"}
+        />
+      )}
       <Table variant='simple' size={'sm'}>
         <Thead>
           <Tr>
+            <Th>##</Th>
             <Th>Produto</Th>
             <Th>Funcionário</Th>
             <Th>Tipo</Th>
@@ -31,6 +46,11 @@ export function ListaLancamentos(){
               }}
               key={lancamento.id}
               >
+                <Td>
+                  <Text fontWeight={"bold"} fontSize={"lg"}>
+                      {lancamento.id}
+                  </Text>
+                </Td>
                 <Td>
                   <Flex direction={"column"}>
                     <Text fontWeight={"bold"} fontSize={"lg"}>
@@ -64,6 +84,10 @@ export function ListaLancamentos(){
                     variant={"outline"}
                     icon={<BsTrash />}
                     aria-label="deletar"
+                    onClick={() => {
+                      onOpen();
+                      setLancamentoDelte(lancamento);
+                    }}
                   />
                 </Td>
               </Tr>
