@@ -45,3 +45,14 @@ export interface Usuario {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface errorAxios {
+  response: {
+    data: {
+      error: string;
+      status: boolean;
+      statusCode: number;
+    }
+  },
+  message: string;
+}

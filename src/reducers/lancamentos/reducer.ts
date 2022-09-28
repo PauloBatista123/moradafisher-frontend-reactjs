@@ -15,6 +15,14 @@ export function LancamentoReducer(state: LancamentoStateData, action: any){
         draft.lancamentos.push(action.payload.newLancamento);
       });
     }
+
+    case lancamentoActionType.DELETE_LANCAMENTOS: {
+      const findIndex = state.lancamentos.findIndex(func => func.id === action.payload.data.id);
+
+      return produce(state, draft => {
+        draft.lancamentos.splice(findIndex, 1);
+      });
+    };
     default: 
       return state;
   }
