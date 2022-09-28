@@ -13,7 +13,7 @@ export interface Lancamento {
   id: string;
   peso: string;
   funcionario: Funcionario;
-  tipo: 'entrada' | 'saida' | undefined;
+  tipo: 'ENTRADA' | 'SAIDA' | undefined;
   created_at : string;
   updated_at : string;
   usuario: Usuario;

@@ -11,7 +11,7 @@ export function ListaLancamentos(){
 
   return (
     <TableContainer>
-      <Table variant='simple'>
+      <Table variant='simple' size={'sm'}>
         <Thead>
           <Tr>
             <Th>Produto</Th>
@@ -47,7 +47,7 @@ export function ListaLancamentos(){
                   </Text>
                 </Td>
                 <Td>
-                    <Badge colorScheme={lancamento.tipo === 'entrada' ? 'red' : 'green'} fontWeight={"bold"} fontSize={"sm"} padding={"8px"} borderRadius={"6px"}>
+                    <Badge colorScheme={lancamento.tipo === 'SAIDA' ? 'red' : 'green'} fontWeight={"bold"} fontSize={"sm"} padding={"8px"} borderRadius={"6px"}>
                       {lancamento.tipo}
                     </Badge>
                 </Td>

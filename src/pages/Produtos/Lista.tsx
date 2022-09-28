@@ -26,7 +26,7 @@ export function Lista() {
         key={"deletar-produto"}
       />
     <TableContainer>
-      <Table variant='simple'>
+      <Table variant='simple' size={"sm"}>
         <Thead>
           <Tr>
             <Th>Produto</Th>

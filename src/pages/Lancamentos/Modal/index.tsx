@@ -115,31 +115,31 @@ export function ModalForm({isOpen, onClose}: ModalProps){
           <SimpleGrid mt={"8"} spacing={["2","4"]} w={"100%"} columns={2}>
             <Button
                 type='button'
-                color={tipo === 'entrada' ? 'white' : "blue.900"}
-                bgColor={tipo === 'entrada' ? 'blue.900' : "transparent"}
+                color={tipo === 'ENTRADA' ? 'white' : "blue.900"}
+                bgColor={tipo === 'ENTRADA' ? 'blue.900' : "transparent"}
                 size={'lg'}
                 border={"1px"}
                 _hover={{
                   bgColor: "blue.900",
                   color: "white"
                 }}
-                onClick={() => setValue("tipo", "entrada")}
-                leftIcon={tipo === 'entrada' ? <BsCheckCircle /> : <BsCircle />}
+                onClick={() => setValue("tipo", "ENTRADA")}
+                leftIcon={tipo === 'ENTRADA' ? <BsCheckCircle /> : <BsCircle />}
               >
               Entrada
             </Button>
             <Button
                 type='button'
-                color={tipo === 'saida' ? 'white' : "red.900"}
-                bgColor={tipo === 'saida' ? 'red.900' : "transparent"}
+                color={tipo === 'SAIDA' ? 'white' : "red.900"}
+                bgColor={tipo === 'SAIDA' ? 'red.900' : "transparent"}
                 size={'lg'}
                 border={"1px"}
                 _hover={{
                   bgColor: "red.900",
                   color: "white"
                 }}
-                onClick={() => setValue("tipo", "saida")}
-                leftIcon={tipo === 'saida' ? <BsCheckCircle /> : <BsCircle />}
+                onClick={() => setValue("tipo", "SAIDA")}
+                leftIcon={tipo === 'SAIDA' ? <BsCheckCircle /> : <BsCircle />}
               >
               Saída
             </Button>

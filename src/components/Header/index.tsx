@@ -9,14 +9,14 @@ export function Header(){
   const { onOpen } = useSidebarDrawer();
 
   const isVersionLg = useBreakpointValue({
-    base: false,
-    lg: true,
+    base: true,
+    lg: false,
   });
 
   return(
     <Flex
       as={"header"}
-      w="100%"
+      w="100vw"
       h={"20"}
       mx="auto"
       px="6"

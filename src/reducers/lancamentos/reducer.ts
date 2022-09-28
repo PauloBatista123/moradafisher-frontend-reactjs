@@ -11,6 +11,7 @@ export function LancamentoReducer(state: LancamentoStateData, action: any){
     }
     case lancamentoActionType.CREATE_NEW_LANCAMENTO: {
       return produce(state, draft => {
+        console.log(action.payload.newLancamento)
         draft.lancamentos.push(action.payload.newLancamento);
       });
     }

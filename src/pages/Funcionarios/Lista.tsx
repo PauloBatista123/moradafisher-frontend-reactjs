@@ -34,7 +34,7 @@ export function Lista(){
       )}
 
       <TableContainer>
-      <Table variant='simple'>
+      <Table variant='simple' size={"sm"}>
         <Thead>
           <Tr>
             <Th>Funcionário</Th>
