@@ -8,7 +8,7 @@ export function Funcionarios(){
   const {isOpen, onClose, onOpen} = useDisclosure();
 
   return(
-    <SimpleGrid spacing={"10"} flex="1">
+    <SimpleGrid flex="1">
       <Box
         borderRadius={8}
         bg="whiteAlpha.100"

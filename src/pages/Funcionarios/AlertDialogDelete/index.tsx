@@ -7,10 +7,13 @@ import {
   AlertDialogOverlay,
   Button,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
-import { useRef, RefObject, useEffect, useContext } from 'react';
-import { useFuncionarios } from '../../../hooks/useFuncionarios';
-import { Funcionario, Produtos } from '../../../utils/interfaces';
+import { useRef } from 'react';
+import { useMutation } from 'react-query';
+import { api } from '../../../services/api';
+import { queryClient } from '../../../services/queryCliente';
+import { Funcionario } from '../../../utils/interfaces';
 
 interface AlertDialogProps {
   mensagem: string;
@@ -23,7 +26,38 @@ interface AlertDialogProps {
 export function AlertDialogDelete({mensagem, titulo, isOpen, funcionario, onClose}: AlertDialogProps) {
   
   const cancelRef = useRef<any>();
-  const {deleteFuncionario, isLoading} = useFuncionarios();
+  const toast = useToast();
+  const deletarFuncionario = useMutation(async (funcionario: Funcionario) => {
+    const response = await api.delete(`funcionarios/${funcionario.id}`);
+
+    return response.data;
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['funcionarios']);
+      toast({
+        title: 'Sucesso!',
+        description: `Funcionario adicionado com sucesso!`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    },
+    onError: (err: Error) => {
+      toast({
+        title: 'Erro!',
+        description: err.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    }
+  })
+
+  function onDeleteFuncioanrio(funcionario: Funcionario){
+    deletarFuncionario.mutateAsync(funcionario);
+  }
 
   return (
     <AlertDialog
@@ -46,7 +80,7 @@ export function AlertDialogDelete({mensagem, titulo, isOpen, funcionario, onClos
             <Button onClick={onClose}>
               Cancelar
             </Button>
-            <Button colorScheme='red' ml={3} onClickCapture={() => {deleteFuncionario(funcionario); onClose()}} isLoading={isLoading} loadingText={"Deletando..."}>
+            <Button colorScheme='red' ml={3} onClickCapture={() => {onDeleteFuncioanrio(funcionario); onClose()}} isLoading={deletarFuncionario.isLoading} loadingText={"Deletando..."}>
               Deletar
             </Button>
           </AlertDialogFooter>
