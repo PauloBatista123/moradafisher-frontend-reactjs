@@ -17,7 +17,7 @@ interface GetProdutosResponse {
 
 export async function getProdutos(page: number): Promise<GetProdutosResponse> {
   
-  const response = await api.get('funcionarios', {
+  const response = await api.get('produtos', {
     params: {
       page
     }

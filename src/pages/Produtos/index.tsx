@@ -7,7 +7,7 @@ export function Produtos(){
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return(
-    <SimpleGrid spacing={"10"} flex="1">
+    <SimpleGrid flex="1">
       <Box
         borderRadius={8}
         bg="whiteAlpha.100"

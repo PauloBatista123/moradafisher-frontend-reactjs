@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { Fragment, useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
+import { Pagination } from "../../components/Pagination/Index";
 import { useProdutos } from "../../hooks/useProdutos";
 import { Produtos } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
@@ -10,9 +11,10 @@ import { SkeletonLista } from "./SkeletonLista";
 
 export function Lista() {
 
-  const {produtos, isLoading} = useProdutos();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [produtoDelete, setProdutoDelete] = useState<Produtos | undefined>(undefined);
+  const [page, setPage] = useState(1);
+  const {data} = useProdutos(page);
 
   return (
 
@@ -38,7 +40,7 @@ export function Lista() {
         <Tbody>
         
           {
-            produtos.map((produto) => (
+            data?.data.map((produto) => (
               <Tr 
               _hover={{
                 bgColor: "blackAlpha.50"
@@ -62,11 +64,8 @@ export function Lista() {
                 </Td>
                 <Td>
                   <Flex direction={"column"}>
-                    <Text>
-                      Última alteração {format(new Date(produto.updated_at), "d 'de' MMM 'às' hh:mm", { locale: ptBR} )}
-                    </Text>
                     <Text color={"gray.500"} fontSize={"sm"}>
-                      Criando em {format(new Date(produto.created_at), "d 'de' MMM 'de' yyyy", { locale: ptBR} )}
+                      {produto.created_at}
                     </Text>
                   </Flex>
                 </Td>
@@ -88,6 +87,15 @@ export function Lista() {
           
         </Tbody>
       </Table>
+      <Pagination 
+          totalCountofRegisters={data?.meta.total}
+          currentPage={data?.meta.current_page}
+          onPageChange={setPage}
+          numberToPage={data?.meta.to}
+          lastPage={data?.meta.last_page}
+          numberOfItens={data?.data.length}
+          registerPerPage={data?.meta.per_page}
+        />
     </TableContainer>
     </Fragment>
   );
