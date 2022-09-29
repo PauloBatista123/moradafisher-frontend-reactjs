@@ -4,7 +4,10 @@ import {useForm} from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../../components/Form/Input";
-import { useFuncionarios } from "../../../hooks/useFuncionarios";
+import { useMutation } from "react-query";
+import { api } from "../../../services/api";
+import { queryClient } from "../../../services/queryCliente";
+import { useToast } from "@chakra-ui/react";
 
 
 interface ModalProps {
@@ -22,6 +25,34 @@ const newFormValidation = zod.object({
 type newFormData = zod.infer<typeof newFormValidation>;
 
 export function ModalForm({isOpen, onClose}: ModalProps){
+  const toast = useToast();
+  const createFuncionario = useMutation(async (funcionario: newFormData) => {
+    const response = await api.post('funcionarios/register', {...funcionario, usuario_id: 2});
+
+    return response.data;
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['funcionarios']);
+      toast({
+        title: 'Sucesso!',
+        description: `Funcionario adicionado com sucesso!`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    },
+    onError: (err: Error) => {
+      toast({
+        title: 'Erro!',
+        description: err.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    }
+  });
 
   //useform hook
   const newFormData = useForm<newFormData>({
@@ -29,12 +60,11 @@ export function ModalForm({isOpen, onClose}: ModalProps){
     defaultValues: { nome: undefined, cargo: undefined }
   });
 
-  const {register, formState: {errors}, handleSubmit, reset} = newFormData;
-  const {criarFuncionario, isLoading} = useFuncionarios();
-  
+  const {register, formState: {errors, isSubmitting}, handleSubmit, reset} = newFormData;
+ 
 
   function createFormFuncionario(data: newFormData) {
-    criarFuncionario(data);
+    createFuncionario.mutateAsync(data);
     onClose();
     reset();
   }
@@ -99,7 +129,7 @@ export function ModalForm({isOpen, onClose}: ModalProps){
               <RiSave3Line />
              }
              onClick={handleSubmit(createFormFuncionario)}
-             isLoading={isLoading}
+             isLoading={isSubmitting}
              loadingText={"Enviando..."}
             >
               Salvar

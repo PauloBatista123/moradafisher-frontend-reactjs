@@ -2,23 +2,18 @@ import { Badge, Flex, IconButton, Table, TableContainer, Tbody, Td, Text, Th, Th
 import { Fragment, useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { format } from "date-fns";
-import ptBR from "date-fns/locale/pt-BR";
 import { SkeletonLista } from "./SkeletonLista";
 import { useFuncionarios } from "../../hooks/useFuncionarios";
 import { Funcionario } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
+import { Pagination } from "../../components/Pagination/Index";
 
 export function Lista(){
 
-  const {isLoading, funcionarios} = useFuncionarios();
   const [funcionarioDelete, setFuncionarioDelete] = useState<Funcionario>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  if(isLoading){
-    return (
-      <SkeletonLista />  
-    )
-  }
+  const [page, setPage] = useState(1);
+  const {data, isLoading, error, refetch} = useFuncionarios(page);
 
   return (
     <Fragment>
@@ -33,70 +28,86 @@ export function Lista(){
         />
       )}
 
-      <TableContainer>
-      <Table variant='simple' size={"sm"}>
-        <Thead>
-          <Tr>
-            <Th>Funcionário</Th>
-            <Th>Status</Th>
-            <Th>Alteração</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-        
-          {
-            funcionarios?.map((funcionario) => (
-              <Tr 
-              _hover={{
-                bgColor: "blackAlpha.50"
-              }}
-              key={funcionario.id}
-              >
-                <Td>
-                  <Flex direction={"column"}>
-                    <Text fontWeight={"bold"} fontSize={"lg"}>
-                      {funcionario.nome}
-                    </Text>
-                    <Text>
-                      Cargo: {funcionario.cargo}
-                    </Text>
-                  </Flex>
-                </Td>
-                <Td>
-                    <Badge colorScheme={funcionario.status === 'BLOQUEADO' ? 'red' : 'green'} fontWeight={"bold"} fontSize={"sm"} padding={"8px"} borderRadius={"6px"}>
-                      {funcionario.status}
-                    </Badge>
-                </Td>
-                <Td>
-                  <Flex direction={"column"}>
-                    <Text>
-                      Última alteração {format(new Date(funcionario.updated_at), "d 'de' MMM 'às' hh:mm", { locale: ptBR} )}
-                    </Text>
-                    <Text color={"gray.500"} fontSize={"sm"}>
-                      Criando em {format(new Date(funcionario.created_at), "d 'de' MMM 'de' yyyy", { locale: ptBR} )}
-                    </Text>
-                  </Flex>
-                </Td>
-                <Td>
-                  <IconButton 
-                    colorScheme={"red"}
-                    variant={"outline"}
-                    icon={<BsTrash />}
-                    aria-label="deletar"
-                    onClick={() => {
-                      onOpen();
-                      setFuncionarioDelete(funcionario);
-                    }}
-                  />
-                </Td>
-              </Tr>
-            ))
-          }
+      {isLoading ? (
+        <SkeletonLista />
+      ) : error ? (
+        <Flex justify={"center"}>
+          <Text>Falha ao obter dados</Text>
+        </Flex>
+      ) : (
+
+        <TableContainer>
+        <Table variant='simple' size={"sm"}>
+          <Thead>
+            <Tr>
+              <Th>Funcionário</Th>
+              <Th>Status</Th>
+              <Th>Alteração</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
           
-        </Tbody>
-      </Table>
-    </TableContainer>
+            {
+              data?.data.map((funcionario) => (
+                <Tr 
+                _hover={{
+                  bgColor: "blackAlpha.50"
+                }}
+                key={funcionario.id}
+                >
+                  <Td>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"bold"} fontSize={"lg"}>
+                        {funcionario.nome}
+                      </Text>
+                      <Text>
+                        Cargo: {funcionario.cargo}
+                      </Text>
+                    </Flex>
+                  </Td>
+                  <Td>
+                      <Badge colorScheme={funcionario.status === 'BLOQUEADO' ? 'red' : 'green'} fontWeight={"bold"} fontSize={"sm"} padding={"8px"} borderRadius={"6px"}>
+                        {funcionario.status}
+                      </Badge>
+                  </Td>
+                  <Td>
+                    <Flex direction={"column"}>
+                      <Text color={"gray.500"} fontSize={"sm"}>
+                        {funcionario.updated_at}
+                      </Text>
+                    </Flex>
+                  </Td>
+                  <Td>
+                    <IconButton 
+                      colorScheme={"red"}
+                      variant={"outline"}
+                      icon={<BsTrash />}
+                      aria-label="deletar"
+                      onClick={() => {
+                        onOpen();
+                        setFuncionarioDelete(funcionario);
+                      }}
+                    />
+                  </Td>
+                </Tr>
+              ))
+            }
+            
+          </Tbody>
+        </Table>
+  
+        <Pagination 
+          totalCountofRegisters={data?.meta.total}
+          currentPage={data?.meta.current_page}
+          onPageChange={setPage}
+          numberToPage={data?.meta.to}
+          lastPage={data?.meta.last_page}
+          numberOfItens={data?.data.length}
+          registerPerPage={data?.meta.per_page}
+        />
+      </TableContainer>
+      )}
     </Fragment>
   );
 }
