@@ -7,10 +7,14 @@ import {
   AlertDialogOverlay,
   Button,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import { useRef, RefObject, useEffect, useContext } from 'react';
+import { useMutation } from 'react-query';
 import { ProdutosContext } from '../../../contexts/ProdutosContext';
 import { useProdutos } from '../../../hooks/useProdutos';
+import { api } from '../../../services/api';
+import { queryClient } from '../../../services/queryCliente';
 import { Produtos } from '../../../utils/interfaces';
 
 interface AlertDialogProps {
@@ -23,9 +27,39 @@ interface AlertDialogProps {
 
 export function AlertDialogDelete({mensagem, titulo, isOpen, produto, onClose}: AlertDialogProps) {
   
+  const toast = useToast();
   const cancelRef = useRef<any>();
-  const {deletarProduto, isLoading} = useProdutos();
-
+  const deletarProduto = useMutation(async (produtoId: string) => {
+    const response = await api.delete(`produtos/${produtoId}`);
+    return response;
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['produtos']);
+      toast({
+        title: 'Sucesso!',
+        description: `Produto deletado com sucesso!`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    },
+    onError: (err: Error) => {
+      toast({
+        title: 'Erro!',
+        description: err.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    }
+  })
+  
+  function onDeletarProduto(produtoId: string){
+    deletarProduto.mutateAsync(produtoId);
+  }
+  
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -47,7 +81,7 @@ export function AlertDialogDelete({mensagem, titulo, isOpen, produto, onClose}: 
             <Button onClick={onClose}>
               Cancelar
             </Button>
-            <Button colorScheme='red' ml={3} onClickCapture={() => {deletarProduto(String(produto?.id)), onClose()}} isLoading={isLoading} loadingText={"Deletando..."}>
+            <Button colorScheme='red' ml={3} onClickCapture={() => {onDeletarProduto(String(produto?.id)), onClose()}} isLoading={deletarProduto.isLoading} loadingText={"Deletando..."}>
               Deletar
             </Button>
           </AlertDialogFooter>
