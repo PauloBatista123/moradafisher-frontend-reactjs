@@ -1,12 +1,12 @@
-import { Box, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, SimpleGrid } from '@chakra-ui/react'
+import { Box, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, SimpleGrid, useToast } from '@chakra-ui/react'
 import { Input } from '../../../components/Form/Input';
-import {useContext} from 'react'
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod'
 import { RiSave3Line } from 'react-icons/ri';
-import { ProdutosContext } from '../../../contexts/ProdutosContext';
-import { useProdutos } from '../../../hooks/useProdutos';
+import { useMutation } from 'react-query';
+import { api } from '../../../services/api';
+import { queryClient } from '../../../services/queryCliente';
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,7 +22,34 @@ type newFormData = zod.infer<typeof newFormValidation>
 
 export function ModalForm({isOpen, onClose}: ModalProps){
 
-  const {criarNovoProduto, isLoading} = useProdutos();
+  const toast = useToast();
+  const criarProduto = useMutation(async (produto: newFormData) => {
+    const response = await api.post('produtos/register', {...produto, usuario_id: 2});
+
+    return response.data;
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['produtos']);
+      toast({
+        title: 'Sucesso!',
+        description: `Produto adicionado com sucesso!`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    },
+    onError: (err: Error) => {
+      toast({
+        title: 'Erro!',
+        description: err.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    }
+  });
 
   const newFormLancamento = useForm<newFormData>({
     resolver: zodResolver(newFormValidation),
@@ -32,10 +59,10 @@ export function ModalForm({isOpen, onClose}: ModalProps){
     }
   })
 
-  const {handleSubmit, register, formState: {errors}, reset} = newFormLancamento;
+  const {handleSubmit, register, formState: {errors, isSubmitting}, reset} = newFormLancamento;
 
   function createFormProduto(data: newFormData){
-    criarNovoProduto(data)
+    criarProduto.mutateAsync(data);
     reset();
     onClose();
   }
@@ -100,7 +127,7 @@ export function ModalForm({isOpen, onClose}: ModalProps){
               <RiSave3Line />
              }
              onClick={handleSubmit(createFormProduto)}
-             isLoading={isLoading}
+             isLoading={isSubmitting}
              loadingText={"Enviando..."}
             >
               Salvar
