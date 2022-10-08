@@ -1,21 +1,39 @@
 import { Badge, Button, Flex, IconButton, Skeleton, SkeletonText, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { BsTrash } from "react-icons/bs";
 import { Pagination } from "../../components/Pagination/Index";
 import { useProdutos } from "../../hooks/useProdutos";
+import { queryClient } from "../../services/queryCliente";
 import { Produtos } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
+import { SkeletonLista } from "./SkeletonLista";
 
 export function Lista() {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {watch} = useFormContext();
   const [produtoDelete, setProdutoDelete] = useState<Produtos | undefined>(undefined);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [page, setPage] = useState(1);
-  const {data} = useProdutos(page);
+  const [filter, setFilter] = useState<string[]>([]);
+  const filtrar = watch(["filtra_nome", "filtra_ordem"]);
+  const {data, isLoading, error} = useProdutos({page, filter});
+
+  useEffect(()=>{
+
+    if(filtrar[0] != undefined || filtrar[1] != undefined){
+      setFilter(filtrar);
+    }   
+
+    return () => {
+      queryClient.invalidateQueries(["produtos"]);
+    }
+  }, [filtrar[0], filtrar[1]])
 
   return (
 
     <Fragment>
+      {produtoDelete && (
       <AlertDialogDelete 
         isOpen={isOpen}
         mensagem={"Deseja deletar o produto?"}
@@ -24,6 +42,16 @@ export function Lista() {
         produto={produtoDelete}
         key={"deletar-produto"}
       />
+      )}
+      
+      {isLoading ? (
+        <SkeletonLista />
+      ) : error ? (
+        <Flex justify={"center"}>
+          <Text>Falha ao obter dados</Text>
+        </Flex>
+      ) : (
+
     <TableContainer>
       <Table variant='simple' size={"sm"}>
         <Thead>
@@ -94,6 +122,7 @@ export function Lista() {
           registerPerPage={data?.meta.per_page}
         />
     </TableContainer>
+    )}
     </Fragment>
   );
 }

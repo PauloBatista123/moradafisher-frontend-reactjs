@@ -15,11 +15,18 @@ interface GetProdutosResponse {
   }
 }
 
-export async function getProdutos(page: number): Promise<GetProdutosResponse> {
+interface UseProdutosProps {
+  page: number;
+  filter: string[];
+}
+
+export async function getProdutos({page, filter}:UseProdutosProps): Promise<GetProdutosResponse> {
   
   const response = await api.get('produtos', {
     params: {
-      page
+      page,
+      nome: filter[0],
+      ordem: filter[1]
     }
   });
 
@@ -50,6 +57,6 @@ export async function getProdutos(page: number): Promise<GetProdutosResponse> {
   }
 }
 
-export function useProdutos(page: number){
-  return useQuery(['produtos', page], async () => await getProdutos(page));
+export function useProdutos({page, filter}: UseProdutosProps){
+  return useQuery(['produtos', {page, filter}], async () => await getProdutos({page, filter}));
 }
