@@ -7,6 +7,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Lancamento } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
 import { SkeletonLista } from "./SkeletonLista";
+import { Pagination } from "../../components/Pagination/Index";
 
 export function ListaLancamentos(){
   
@@ -107,7 +108,18 @@ export function ListaLancamentos(){
           
         </Tbody>
       </Table>
+      <Pagination 
+          totalCountofRegisters={data?.meta.total}
+          currentPage={data?.meta.current_page}
+          onPageChange={setPage}
+          numberToPage={data?.meta.to}
+          lastPage={data?.meta.last_page}
+          numberOfItens={data?.data.length}
+          registerPerPage={data?.meta.per_page}
+        />
+
       </TableContainer>
+
       )}
     </Fragment>
   )
