@@ -8,7 +8,7 @@ export function Dashboard(){
     <Flex direction="column" h="100%">
       <Header />
 
-      <Flex w="100%" my="6" mx="auto" px="6">
+      <Flex w="100%" my="4" px="2">
         <Sidebar />
         <Outlet />
       </Flex>

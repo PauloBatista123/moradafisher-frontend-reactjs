@@ -7,13 +7,29 @@ import { useFuncionarios } from "../../hooks/useFuncionarios";
 import { Funcionario } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
 import { Pagination } from "../../components/Pagination/Index";
+import { useFormContext } from "react-hook-form";
+import { queryClient } from "../../services/queryCliente";
 
 export function Lista(){
 
+  const {watch} = useFormContext();
   const [funcionarioDelete, setFuncionarioDelete] = useState<Funcionario>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [page, setPage] = useState(1);
-  const {data, isLoading, error, refetch} = useFuncionarios(page);
+  const [filter, setFilter] = useState<string[]>([]);
+  const filtrar = watch(["filtra_nome", "filtra_ordem"]);
+  const {data, isLoading, error, refetch} = useFuncionarios({page, filter});
+
+  useEffect(()=>{
+
+    if(filtrar[0] != undefined || filtrar[1] != undefined){
+      setFilter(filtrar);
+    }   
+
+    return () => {
+      queryClient.invalidateQueries(["funcionarios"]);
+    }
+  }, [filtrar[0], filtrar[1]])
 
   return (
     <Fragment>

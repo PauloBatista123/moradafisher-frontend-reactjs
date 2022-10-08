@@ -15,11 +15,18 @@ interface GetFuncionariosResponse {
   }
 }
 
-export async function getFuncionarios(page: number): Promise<GetFuncionariosResponse> {
-  
+interface UseFuncionariosProps {
+  page: number;
+  filter: string[];
+}
+
+export async function getFuncionarios({page, filter}: UseFuncionariosProps): Promise<GetFuncionariosResponse> {
+  console.log(filter);
   const response = await api.get('funcionarios', {
     params: {
-      page
+      page,
+      nome: filter[0],
+      ordem: filter[1]
     }
   });
 
@@ -50,6 +57,6 @@ export async function getFuncionarios(page: number): Promise<GetFuncionariosResp
   }
 }
 
-export function useFuncionarios(page: number){
-  return useQuery(['funcionarios', page], () => getFuncionarios(page));
+export function useFuncionarios({page, filter}: UseFuncionariosProps){
+  return useQuery(['funcionarios', {page, filter}], () => getFuncionarios({page, filter}));
 }
