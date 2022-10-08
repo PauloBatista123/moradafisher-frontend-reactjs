@@ -35,7 +35,7 @@ export function ModalForm({isOpen, onClose}: ModalProps){
       queryClient.invalidateQueries(['funcionarios']);
       toast({
         title: 'Sucesso!',
-        description: `Funcionario adicionado com sucesso!`,
+        description: `Lancamento adicionado com sucesso!`,
         status: 'success',
         duration: 9000,
         isClosable: true,
