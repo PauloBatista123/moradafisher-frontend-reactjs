@@ -1,4 +1,5 @@
-import { QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter } from "react-router-dom";
 import { SidebarDrawerProvider } from "./contexts/SidebarDrawerContext";
 import { Router } from "./pages/Router";
@@ -12,6 +13,8 @@ export function App() {
         <SidebarDrawerProvider>
           <Router />
         </SidebarDrawerProvider>
+        
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </BrowserRouter>
   )

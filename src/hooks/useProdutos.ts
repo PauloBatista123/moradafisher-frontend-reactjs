@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../services/api";
 import { Produtos } from "../utils/interfaces";
 
@@ -37,11 +37,11 @@ export async function getProdutos(page: number): Promise<GetProdutosResponse> {
   });
 
   const meta = {
-    current_page: response.data.meta.current_page,
-    last_page: response.data.meta.last_page,
-    per_page: response.data.meta.per_page,
-    to: response.data.meta.to,
-    total: response.data.meta.total,
+    current_page: response.data.meta.current_page ?? 0,
+    last_page: response.data.meta.last_page ?? 0,
+    per_page: response.data.meta.per_page ?? 0,
+    to: response.data.meta.to ?? 0,
+    total: response.data.meta.total ?? 0,
   }
 
   return {

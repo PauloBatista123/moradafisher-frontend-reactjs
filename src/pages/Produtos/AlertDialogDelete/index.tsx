@@ -10,7 +10,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useRef, RefObject, useEffect, useContext } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { ProdutosContext } from '../../../contexts/ProdutosContext';
 import { useProdutos } from '../../../hooks/useProdutos';
 import { api } from '../../../services/api';

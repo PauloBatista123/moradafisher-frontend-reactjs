@@ -1,0 +1,105 @@
+import { Skeleton, SkeletonText, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Fragment } from "react";
+
+export function SkeletonLista(){
+  return (
+    <Fragment>
+    
+    <TableContainer>
+      <Table variant='simple'>
+        <Thead>
+          <Tr>
+            <Th>##</Th>
+            <Th>Produto</Th>
+            <Th>Funcionário</Th>
+            <Th>Tipo</Th>
+            <Th>Informação</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+          </Tr> 
+          <Tr>
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+          </Tr> 
+          <Tr>
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+            <Td>
+              <Skeleton  
+              isLoaded={false}
+              height='20px'
+              ></Skeleton>
+            </Td>  
+          </Tr>  
+        </Tbody>
+      </Table>
+    </TableContainer>
+    
+    </Fragment>
+  );
+}

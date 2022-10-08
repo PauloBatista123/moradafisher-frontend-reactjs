@@ -1,20 +1,18 @@
-import { Box, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, FormControl, SimpleGrid, Text } from '@chakra-ui/react'
-import {useContext, useEffect, useState} from 'react'
-import { api } from '../../../services/api';
-import { AxiosResponse } from 'axios';
-import { FormLabel } from '@chakra-ui/core';
-import { RiCheckDoubleFill, RiCheckFill, RiSave3Line } from 'react-icons/ri';
+import { Box, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, SimpleGrid, Text, useToast } from '@chakra-ui/react'
+import { RiSave3Line } from 'react-icons/ri';
 import { BsCircle, BsCheckCircle } from 'react-icons/bs';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod'
-import { Funcionario } from '../../../utils/interfaces';
-import { LancamentosContext } from '../../../contexts/LancamentosContext';
 import { Input } from '../../../components/Form/Input';
 import { Select } from '../../../components/Form/Select';
-import { useFuncionarios } from '../../../hooks/useFuncionarios';
-import { useLancamentos } from '../../../hooks/useLancamentos';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Lancamento, Produtos } from '../../../utils/interfaces';
 import { useProdutos } from '../../../hooks/useProdutos';
+import { useAllProdutos } from '../../../hooks/useAllProdutos';
+import { useAllFuncionarios } from '../../../hooks/useAllFuncionarios';
+import { api } from '../../../services/api';
+import { queryClient } from '../../../services/queryCliente';
 
 interface ModalProps {
   isOpen: boolean;
@@ -32,9 +30,36 @@ type newFormData = zod.infer<typeof newFormValidation>
 
 export function ModalForm({isOpen, onClose}: ModalProps){
 
-  const {funcionarios} = useFuncionarios();
-  const {create} = useLancamentos();
-  const {produtos} = useProdutos();
+  const queryProdutos = useAllProdutos();
+  const queryFuncionarios = useAllFuncionarios();
+  const toast = useToast();
+  const createLancamento = useMutation(async (lancamento: newFormData) => {
+    const response = await api.post('lancamentos/register', {...lancamento, usuario_id: 2});
+
+    return response.data;
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['lancamentos']);
+      toast({
+        title: 'Sucesso!',
+        description: `Funcionario adicionado com sucesso!`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    },
+    onError: (err: Error) => {
+      toast({
+        title: 'Erro!',
+        description: err.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      })
+    }
+  });
 
   const newFormLancamento = useForm<newFormData>({
     resolver: zodResolver(newFormValidation),
@@ -47,14 +72,14 @@ export function ModalForm({isOpen, onClose}: ModalProps){
 
   const {handleSubmit, register, formState: {errors}, setValue, watch, reset} = newFormLancamento;
 
-  const optionsFuncionario = funcionarios.map(func => {
+  const optionsFuncionario = queryFuncionarios.data?.funcionarios.map(func => {
     return {
       value: func.id,
       optionText: func.nome,
     }
   });
 
-  const optionsProdutos = produtos.map(produto => {
+  const optionsProdutos = queryProdutos.data?.produtos.map(produto => {
     return {
       value: produto.id,
       optionText: produto.nome,
@@ -62,7 +87,7 @@ export function ModalForm({isOpen, onClose}: ModalProps){
   });
 
   function createFormLancamento(data: newFormData){
-    create(data)
+    createLancamento.mutateAsync(data);
     reset();
     onClose();
   }
@@ -86,17 +111,21 @@ export function ModalForm({isOpen, onClose}: ModalProps){
                 error={errors.peso}
                 size={'lg'}
               />
-            <Select
-              id='funcionario_id'
-              label="Funcionário"
-              options={
-                optionsFuncionario
-              }
-              {...register("funcionario_id", {valueAsNumber: true})}
-              error={errors.funcionario_id}
-              size={'lg'}
-              
-            />
+
+            {queryProdutos.isLoading ? <Text>Carregando dados...</Text> : (
+                <Select
+                id='funcionario_id'
+                label="Funcionário"
+                options={
+                  optionsFuncionario
+                }
+                {...register("funcionario_id", {valueAsNumber: true})}
+                error={errors.funcionario_id}
+                size={'lg'}
+                
+              />
+            )}
+            
             <Select
               id='produto_id'
               label="Produto"

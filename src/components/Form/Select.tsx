@@ -6,7 +6,7 @@ interface InputProps extends SelectProps {
   name: string;
   label?: string;
   type?: string;
-  options: {
+  options ?: {
     value: string;
     optionText: string;
   }[];
@@ -35,7 +35,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, InputProps>  = ({n
         {...rest}
       >
         <option value={"0"}>Selecione</option>
-        {options.map(option => (
+        {options?.map(option => (
             <option key={option.value} value={option.value}>{option.optionText}</option>
         ))}
       </SelectForm>

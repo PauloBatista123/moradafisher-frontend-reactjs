@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod'
 import { RiSave3Line } from 'react-icons/ri';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { api } from '../../../services/api';
 import { queryClient } from '../../../services/queryCliente';
 

@@ -3,17 +3,28 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { BsTrash, BsTrashFill } from 'react-icons/bs';
 import ptBR from 'date-fns/locale/pt-BR'
 import { useLancamentos } from '../../hooks/useLancamentos';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Lancamento } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
+import { SkeletonLista } from "./SkeletonLista";
 
 export function ListaLancamentos(){
   
-  const { lancamentos} = useLancamentos();
   const [lancamentoDelete, setLancamentoDelte] = useState<Lancamento>();
+  const [page, setPage] = useState(1);
+  const {data, isLoading, error} = useLancamentos(page);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
+    <Fragment>
+    {isLoading ? (
+      <SkeletonLista />
+    ) : error ? (
+      <Flex justify={"center"}>
+        <Text>Falha ao obter dados</Text>
+      </Flex>
+    ) : (
+
     <TableContainer>
       {lancamentoDelete && (
           <AlertDialogDelete 
@@ -39,7 +50,7 @@ export function ListaLancamentos(){
         <Tbody>
         
           {
-            lancamentos.map((lancamento) => (
+            data?.data.map((lancamento) => (
               <Tr 
               _hover={{
                 bgColor: "blackAlpha.50"
@@ -74,7 +85,7 @@ export function ListaLancamentos(){
                 <Td>
                   <Flex direction={"column"}>
                     <Text>
-                      Criado em {format(new Date(lancamento.created_at), "d 'de' MMM 'às' hh:mm", { locale: ptBR} )}
+                      Criado em {lancamento.created_at}
                     </Text>
                   </Flex>
                 </Td>
@@ -97,5 +108,7 @@ export function ListaLancamentos(){
         </Tbody>
       </Table>
       </TableContainer>
+      )}
+    </Fragment>
   )
 }

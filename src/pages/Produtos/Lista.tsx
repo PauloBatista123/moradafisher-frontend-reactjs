@@ -1,13 +1,10 @@
 import { Badge, Button, Flex, IconButton, Skeleton, SkeletonText, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
-import { format } from "date-fns";
-import ptBR from "date-fns/locale/pt-BR";
 import { Fragment, useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { Pagination } from "../../components/Pagination/Index";
 import { useProdutos } from "../../hooks/useProdutos";
 import { Produtos } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
-import { SkeletonLista } from "./SkeletonLista";
 
 export function Lista() {
 

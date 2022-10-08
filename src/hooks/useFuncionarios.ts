@@ -1,6 +1,6 @@
 import { Funcionario } from "../utils/interfaces";
 import { api } from "../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 
@@ -51,5 +51,5 @@ export async function getFuncionarios(page: number): Promise<GetFuncionariosResp
 }
 
 export function useFuncionarios(page: number){
-  return useQuery(['funcionarios', page], async () => await getFuncionarios(page));
+  return useQuery(['funcionarios', page], () => getFuncionarios(page));
 }
