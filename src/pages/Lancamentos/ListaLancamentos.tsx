@@ -8,25 +8,30 @@ import { Lancamento } from "../../utils/interfaces";
 import { AlertDialogDelete } from "./AlertDialogDelete";
 import { SkeletonLista } from "./SkeletonLista";
 import { Pagination } from "../../components/Pagination/Index";
+import { useFormContext } from "react-hook-form";
+import { queryClient } from "../../services/queryCliente";
 
 export function ListaLancamentos(){
   
+  const {watch} = useFormContext();
   const [lancamentoDelete, setLancamentoDelte] = useState<Lancamento>();
   const [page, setPage] = useState(1);
-  const {data, isLoading, error} = useLancamentos(page);
+  const [filter, setFilter] = useState<string[]>([]);
+  const {data, isLoading, error} = useLancamentos({page, filter});
+  const filtrar = watch(["filtra_funcionario", "filtra_produto", "filtra_tipo"]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(()=>{
+
+    setFilter(filtrar);
+
+    return () => {
+      queryClient.invalidateQueries(["lancamentos"]);
+    }
+  }, [filtrar[0], filtrar[1], filtrar[2]])
 
   return (
     <Fragment>
-    {isLoading ? (
-      <SkeletonLista />
-    ) : error ? (
-      <Flex justify={"center"}>
-        <Text>Falha ao obter dados</Text>
-      </Flex>
-    ) : (
-
-    <TableContainer>
       {lancamentoDelete && (
           <AlertDialogDelete 
           isOpen={isOpen}
@@ -37,6 +42,16 @@ export function ListaLancamentos(){
           key={"deletar-lancamento"}
         />
       )}
+
+    {isLoading ? (
+      <SkeletonLista />
+    ) : error ? (
+      <Flex justify={"center"}>
+        <Text>Falha ao obter dados</Text>
+      </Flex>
+    ) : (
+
+    <TableContainer>
       <Table variant='simple' size={'sm'}>
         <Thead>
           <Tr>

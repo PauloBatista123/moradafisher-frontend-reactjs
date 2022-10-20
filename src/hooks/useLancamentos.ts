@@ -15,14 +15,22 @@ interface GetLancamentosResponse {
     per_page: number;
     to: number;
     total: number;
-  }
+  },
 }
 
-export async function getLancamentos(page: number): Promise<GetLancamentosResponse> {
+interface useLancamentosProps {
+  page: number;
+  filter: string[];
+}
+
+export async function getLancamentos({page, filter}: useLancamentosProps): Promise<GetLancamentosResponse> {
 
   const response = await api.get('lancamentos', {
     params: {
-      page
+      page,
+      funcionario: filter[0],
+      produto: filter[1],
+      tipo: filter[2],
     }
   });
 
@@ -52,10 +60,10 @@ export async function getLancamentos(page: number): Promise<GetLancamentosRespon
 
   return {
     data,
-    meta
+    meta,
   }
 }
 
-export function useLancamentos(page: number){
-  return useQuery(['lancamentos', page], async () => await getLancamentos(page));
+export function useLancamentos({page, filter}: useLancamentosProps){
+  return useQuery(['lancamentos', {page, filter}], async () => await getLancamentos({page, filter}));
 }
